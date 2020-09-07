@@ -97,7 +97,7 @@ public class SpringCloudOpenfeignAdapter implements Adapter {
                             addElement();
 
                             // feign.RequestTemplate.header(java.lang.String, java.lang.String...)
-                            String className = "Lfeign/RequestTemplate;";
+                            String className = "feign/RequestTemplate";
                             String name = "header";
                             String dep = "(Ljava/lang/String;[Ljava/lang/String;)Lfeign/RequestTemplate;";
                             // 操作数栈：
