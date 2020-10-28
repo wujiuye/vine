@@ -4,6 +4,7 @@ import com.wujiuye.vine.core.context.CallLinkContext;
 import com.wujiuye.vine.core.context.CallRecord;
 import com.wujiuye.vine.core.context.ContextListener;
 import com.wujiuye.vine.core.util.AgentLogger;
+import com.wujiuye.vine.core.util.ExceptionStackHelper;
 import com.wujiuye.vine.core.util.ReflectionUtils;
 import com.wujiuye.vine.core.util.SerializeUtils;
 
@@ -36,7 +37,7 @@ public class LogAspect implements Aspect, ContextListener {
     private void prinfLog(boolean printParamAndReturnValue) {
         CallRecord callRecord = CallLinkContext.getCurCallRecord();
         if (callRecord.getTransactionId() == null) {
-            // 过来调没有事务ID的调用链（说明不是接口调用）
+            // 过滤调没有事务ID的调用链（说明不是接口调用）
             return;
         }
         LogRecord logRecord = toLog(callRecord, printParamAndReturnValue);
@@ -54,7 +55,7 @@ public class LogAspect implements Aspect, ContextListener {
         logRecord.setCntMs(record.getCntMs());
         if (record.getThrowable() != null) {
             logRecord.setError(true);
-            logRecord.setErrorMsg(record.getThrowable().getMessage());
+            logRecord.setErrorMsg(ExceptionStackHelper.getExceptionStackInfo(record.getThrowable(), 15));
         }
         if (printParamAndReturnValue) {
             logRecord.setParams(objToString(record.getParams()));
@@ -80,8 +81,7 @@ public class LogAspect implements Aspect, ContextListener {
                 }
                 messages.add(message);
             }
-            AgentLogger.getLogger().info("transactionId:{}-{}", records.get(0).transactionId,
-                    SerializeUtils.serialize(messages));
+            AgentLogger.getLogger().info("{}", SerializeUtils.serialize(messages));
         }
         CALL_LINKE_LOG_CONTEXT.remove();
     }
