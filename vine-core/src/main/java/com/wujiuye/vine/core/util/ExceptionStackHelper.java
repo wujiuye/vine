@@ -15,15 +15,12 @@ public final class ExceptionStackHelper {
     public static String getExceptionStackInfo(Throwable e, int limit) {
         StackTraceElement[] elements = e.getStackTrace();
         StringBuilder builder = new StringBuilder();
-        builder.append(e.getClass().getName()).append(":").append(e.getMessage());
-        Arrays.stream(elements)
-                .limit(limit > 0 ? limit : Integer.MAX_VALUE)
-                .forEach(element ->
-                        builder.append("class name:").append(element.getClassName())
-                                .append("method name:").append(element.getMethodName())
+        builder.append(e.getClass().getName()).append(":").append(e.getMessage()).append("\n");
+        Arrays.stream(elements).limit(limit > 0 ? limit : Integer.MAX_VALUE)
+                .forEach(element -> builder.append("class name:").append(element.getClassName()).append(",")
+                                .append("method name:").append(element.getMethodName()).append(",")
                                 .append("line number:").append(element.getLineNumber())
-                                .append("\n")
-                );
+                                .append("\n"));
         return builder.toString();
     }
 

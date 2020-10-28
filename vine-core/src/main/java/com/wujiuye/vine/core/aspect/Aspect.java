@@ -15,8 +15,7 @@ public interface Aspect {
      * @param descriptor
      * @param params
      */
-    void before(String className, String methodName,
-                String descriptor, Object[] params);
+    void before(String className, String methodName, String descriptor, Object[] params);
 
     /**
      * 方法抛出异常
@@ -26,8 +25,7 @@ public interface Aspect {
      * @param descriptor
      * @param throwable
      */
-    void error(String className, String methodName,
-               String descriptor, Throwable throwable);
+    void error(String className, String methodName, String descriptor, Throwable throwable);
 
     /**
      * 方法调用完成
@@ -37,7 +35,6 @@ public interface Aspect {
      * @param descriptor
      * @param returnValue
      */
-    void after(String className, String methodName,
-               String descriptor, Object returnValue);
+    void after(String className, String methodName, String descriptor, Object returnValue);
 
 }
