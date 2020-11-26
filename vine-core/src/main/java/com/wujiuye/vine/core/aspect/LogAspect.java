@@ -23,15 +23,17 @@ public class LogAspect implements Aspect, ContextListener {
 
     @Override
     public void error(String className, String methodName, String descriptor, Throwable throwable) {
-        prinfLog(true);
+        printLog(true);
     }
 
     @Override
     public void after(String className, String methodName, String descriptor, Object returnValue) {
-        prinfLog(CallLinkContext.getOrCreateContext().isExistError());
+        // 加入采样率后，注释
+        // printLog(CallLinkContext.getOrCreateContext().isExistError());
+        printLog(true);
     }
 
-    private void prinfLog(boolean printParamAndReturnValue) {
+    private void printLog(boolean printParamAndReturnValue) {
         CallRecord callRecord = CallLinkContext.getCurCallRecord();
         if (callRecord.getTransactionId() == null) {
             // 过滤调没有事务ID的调用链（说明不是接口调用）
@@ -54,7 +56,7 @@ public class LogAspect implements Aspect, ContextListener {
             for (LogRecord record : records) {
                 String message = SerializeUtils.serialize(record);
                 if (message == null) {
-                    message = "serialize error...";
+                    continue;
                 }
                 messages.add(message);
             }
