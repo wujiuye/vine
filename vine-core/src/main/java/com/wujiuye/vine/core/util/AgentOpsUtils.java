@@ -52,6 +52,9 @@ public class AgentOpsUtils {
                 case ConfigConstant.LOG_SHOW_METHOD_DESCRIPTOR:
                     GlobalConfigManager.getConfig().setLogShowMethodDescriptor(Boolean.parseBoolean(value));
                     break;
+                // 设置采样率
+                case ConfigConstant.SAMPLING_RATE:
+                    GlobalConfigManager.getConfig().setSamplingRate(Integer.parseInt(value));
                 default:
             }
         }

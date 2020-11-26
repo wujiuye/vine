@@ -22,4 +22,9 @@ public interface ConfigConstant {
      */
     String LOG_SHOW_METHOD_DESCRIPTOR = "log.showMethodDescriptor";
 
+    /**
+     * 采样率
+     */
+    String SAMPLING_RATE = "samplingRate";
+
 }

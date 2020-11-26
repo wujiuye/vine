@@ -38,6 +38,7 @@ public final class CallLinkContext {
         if (context == null) {
             context = new Context(ContextSpy.getCurTransactionId());
             CONTEXT.set(context);
+            SamplingRateContext.inc();
         }
         return context;
     }
@@ -70,6 +71,7 @@ public final class CallLinkContext {
     }
 
     public static void clear() {
+        SamplingRateContext.reset();
         if (CONTEXT.get() == null) {
             return;
         }

@@ -1,6 +1,7 @@
 package com.wujiuye.vine.core.aspect;
 
 import com.wujiuye.vine.core.context.CallLinkContext;
+import com.wujiuye.vine.core.context.SamplingRateContext;
 import com.wujiuye.vine.spy.Spy;
 
 import java.util.ArrayList;
@@ -30,28 +31,32 @@ public final class MethodCallListener {
     }
 
     public static void before(String className, String methodName, String descriptor, Object[] params) {
-        try {
-            for (Aspect aspect : aspects) {
-                aspect.before(className, methodName, descriptor, params);
+        if (SamplingRateContext.needSampling()) {
+            try {
+                for (Aspect aspect : aspects) {
+                    aspect.before(className, methodName, descriptor, params);
+                }
+            } catch (Exception ex) {
+                // 忽略
             }
-        } catch (Exception ex) {
-            //
         }
     }
 
     public static void complete(Object returnValueOrThrowable, String className, String methodName, String descriptor) {
         try {
-            if (returnValueOrThrowable instanceof Throwable) {
-                for (Aspect aspect : aspects) {
-                    aspect.error(className, methodName, descriptor, (Throwable) returnValueOrThrowable);
-                }
-            } else {
-                for (Aspect aspect : aspects) {
-                    aspect.after(className, methodName, descriptor, returnValueOrThrowable);
+            if (SamplingRateContext.needSampling()) {
+                if (returnValueOrThrowable instanceof Throwable) {
+                    for (Aspect aspect : aspects) {
+                        aspect.error(className, methodName, descriptor, (Throwable) returnValueOrThrowable);
+                    }
+                } else {
+                    for (Aspect aspect : aspects) {
+                        aspect.after(className, methodName, descriptor, returnValueOrThrowable);
+                    }
                 }
             }
         } catch (Exception ex) {
-            //
+            // 忽略
         } finally {
             CallLinkContext.removeCallRecord();
             CallLinkContext.clear();
