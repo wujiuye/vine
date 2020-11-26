@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.LongAdder;
 public class SamplingRateContext {
 
     private final static LongAdder SAMPLING_RATE = new LongAdder();
+    volatile private static int curSamplingRate = 10;
 
     /**
      * 是否需要采样
@@ -19,7 +20,7 @@ public class SamplingRateContext {
      * @return
      */
     public static boolean needSampling() {
-        return SAMPLING_RATE.intValue() == 0;
+        return SAMPLING_RATE.intValue() < curSamplingRate;
     }
 
     public static void inc() {
@@ -27,7 +28,8 @@ public class SamplingRateContext {
     }
 
     public static void reset() {
-        if (GlobalConfigManager.getConfig().getSamplingRate() >= SAMPLING_RATE.intValue()) {
+        if (SAMPLING_RATE.intValue() >= 100) {
+            curSamplingRate = GlobalConfigManager.getConfig().getSamplingRate();
             SAMPLING_RATE.reset();
         }
     }
